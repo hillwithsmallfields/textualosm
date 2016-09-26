@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # coding=utf-8
 import web
-import urllib
+import overpass
 
 # For the web part, see http://webpy.org/docs/0.3/tutorial
 
@@ -9,6 +9,8 @@ import urllib
 # http://wiki.openstreetmap.org/wiki/Overpass_API/Language_Guide and
 # https://github.com/mapbox/mapping/wiki/Overpass-Guide and
 # http://osmlab.github.io/learnoverpass//en/
+# and for the API wrapper:
+# https://github.com/mvexel/overpass-api-python-wrapper
 
 # Started as part of: https://hackpad.com/SOTMOSgeo-Hackday-live-reporting-H4q1GRbgRCz
 
@@ -56,11 +58,11 @@ urls = (
     '/(\d+)', 'way'
 )
 
-overpass = "http://overpass-api.de/api/interpreter?data="
+overpass_api = overpass.API()
 
 class way:
     def GET(self, way):
-        query_preamble = """[out:json];"""
+        query_preamble = "" # """[out:json];"""
         query = "way(37143281);" # In the complete program, this will be able to take a way ID, or a (street) name and something to disambiguate it (city etc)
         fetcher_params = { "building" : "building", # may have to be building|shop|amenity
                            "wayrange": 10,
@@ -69,17 +71,18 @@ class way:
         # for the following two, I might omit the final ">;" and use the "out center", but then I wouldn't be able to tell whether the tagged nodes retrieved above are inside the buildings
         get_areas = """way [~"%(building)s"~".+"](around:%(wayrange)d);>;""" % fetcher_params
         get_relations = """rel [~"%(building)s"~".+"](around:%(wayrange)d);>;""" % fetcher_params # todo: fetch just the outer of the relation (and fetch only multipolygon relations)
-        query_postamble = "(" + get_nodes + get_areas + get_relations + "); out body qt center;"
-        query = overpass + query_preamble + query + query_postamble
-        handle = urllib.urlopen(query)
-        mapdata = handle.read()
-        # todo: convert the data into a Python data structure (with a JSON reader)
+        query_postamble = "(" + get_nodes + get_areas + get_relations + ");"
+        query = query_preamble + query + query_postamble
+        print "Query is", query
+        mapdata = overpass_api.Get(query)
+        # todo: fetch the segments (nodes) of the way, using WayQuery in the python API wrapper
         # todo: convert into features along the way, combining building areas with POIs tagged inside those areas
         # todo: sort the features along the way, probably by working out which way segment the feature is nearest to, and where along that segment the normal from the way to the feature centre falls
         # todo: filter out features which are behind others (we can't guarantee to get only the front rank of things facing the street)
         # todo: work out which features are facing more than one feature on the other side of the street
         # todo: output
-        return render.way("Query was:\n" + query + "\nand reply was:\n" + mapdata)
+        debug_text = '\n'.join([str(f) for f in mapdata['features']])
+        return render.way("Query was:\n" + query + "\nand reply was:\n" + debug_text)
 
 if __name__ == "__main__":
     app = web.application(urls, globals())
