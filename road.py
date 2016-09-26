@@ -1,11 +1,12 @@
 #!/usr/bin/python
+# coding=utf-8
 import web
 import urllib
 
 # For the web part, see http://webpy.org/docs/0.3/tutorial
 
 # For the OSM part, see
-# http://wiki.openstreetmap.org/wiki/Overpass_API/Language_Guides and
+# http://wiki.openstreetmap.org/wiki/Overpass_API/Language_Guide and
 # https://github.com/mapbox/mapping/wiki/Overpass-Guide and
 # http://osmlab.github.io/learnoverpass//en/
 
@@ -52,15 +53,27 @@ import urllib
 
 render = web.template.render('templates/')
 urls = (
-    '/\(d+)', 'way'
+    '/(\d+)', 'way'
 )
+
+overpass = "http://overpass-api.de/api/interpreter?data="
 
 class way:
     def GET(self, way):
-        sample_query = "[out:json];way(37143281);(around(10);<;);out qt;"
-        handle = urllib.open(sample_query)
+        query_preamble = """[out:json];"""
+        query = "way(37143281);"
+        fetcher_params = { "building" : "building", # may have to be building|shop|amenity
+                           "wayrange": 10,
+                           "noderange": 20}
+        get_nodes = """node [~".+"~".+"](around:%(noderange)d);""" % fetcher_params
+        # for the following two, I might omit the final ">;" and use the "out center", but then I wouldn't be able to tell whether the tagged nodes retrieved above are inside the buildings
+        get_areas = """way [~"%(building)s"~".+"](around:%(wayrange)d);>;""" % fetcher_params
+        get_relations = """rel [~"%(building)s"~".+"](around:%(wayrange)d);>;""" % fetcher_params # todo: fetch just the outer of the relation (and fetch only multipolygon relations)
+        query_postamble = "(" + get_nodes + get_areas + get_relations + "); out body qt center;"
+        query = overpass + query_preamble + query + query_postamble
+        handle = urllib.urlopen(query)
         mapdata = handle.read()
-        return render.way(mapdata)
+        return render.way("Query was:\n" + query + "\nand reply was:\n" + mapdata)
 
 if __name__ == "__main__":
     app = web.application(urls, globals())
