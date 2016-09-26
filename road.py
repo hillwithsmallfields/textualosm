@@ -72,16 +72,20 @@ class way:
         get_areas = """way [~"%(building)s"~".+"](around:%(wayrange)d);>;""" % fetcher_params
         get_relations = """rel [~"%(building)s"~".+"](around:%(wayrange)d);>;""" % fetcher_params # todo: fetch just the outer of the relation (and fetch only multipolygon relations)
         query_postamble = "(" + get_nodes + get_areas + get_relations + ");"
-        query = query_preamble + query + query_postamble
-        print "Query is", query
-        mapdata = overpass_api.Get(query)
+        way_query = overpass.WayQuery(query)
+        # way = overpass_api.Get(way_query)
+        feature_query = query_preamble + query + query_postamble
+        print "Query is", feature_query
+        mapdata = overpass_api.Get(feature_query)
         # todo: fetch the segments (nodes) of the way, using WayQuery in the python API wrapper
         # todo: convert into features along the way, combining building areas with POIs tagged inside those areas
         # todo: sort the features along the way, probably by working out which way segment the feature is nearest to, and where along that segment the normal from the way to the feature centre falls
         # todo: filter out features which are behind others (we can't guarantee to get only the front rank of things facing the street)
         # todo: work out which features are facing more than one feature on the other side of the street
         # todo: output
-        debug_text = '\n'.join([str(f) for f in mapdata['features']])
+        debug_text = ""
+        # debug_text += "way data: " + str(way) + "\n"
+        debug_text += "feature data:\n" + '\n'.join([str(f) for f in mapdata['features']])
         return render.way("Query was:\n" + query + "\nand reply was:\n" + debug_text)
 
 if __name__ == "__main__":
