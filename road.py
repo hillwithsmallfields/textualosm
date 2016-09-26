@@ -61,7 +61,7 @@ overpass = "http://overpass-api.de/api/interpreter?data="
 class way:
     def GET(self, way):
         query_preamble = """[out:json];"""
-        query = "way(37143281);"
+        query = "way(37143281);" # In the complete program, this will be able to take a way ID, or a (street) name and something to disambiguate it (city etc)
         fetcher_params = { "building" : "building", # may have to be building|shop|amenity
                            "wayrange": 10,
                            "noderange": 20}
@@ -73,6 +73,12 @@ class way:
         query = overpass + query_preamble + query + query_postamble
         handle = urllib.urlopen(query)
         mapdata = handle.read()
+        # todo: convert the data into a Python data structure (with a JSON reader)
+        # todo: convert into features along the way, combining building areas with POIs tagged inside those areas
+        # todo: sort the features along the way, probably by working out which way segment the feature is nearest to, and where along that segment the normal from the way to the feature centre falls
+        # todo: filter out features which are behind others (we can't guarantee to get only the front rank of things facing the street)
+        # todo: work out which features are facing more than one feature on the other side of the street
+        # todo: output
         return render.way("Query was:\n" + query + "\nand reply was:\n" + mapdata)
 
 if __name__ == "__main__":
