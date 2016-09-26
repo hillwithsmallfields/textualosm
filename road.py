@@ -1,10 +1,14 @@
 #!/usr/bin/python
 import web
 
-# see http://webpy.org/docs/0.3/tutorial
-# see http://wiki.openstreetmap.org/wiki/Overpass_API/Language_Guides
-# Started as part of: https://hackpad.com/SOTMOSgeo-Hackday-live-reporting-H4q1GRbgRCz
+# For the web part, see http://webpy.org/docs/0.3/tutorial
 
+# For the OSM part, see
+# http://wiki.openstreetmap.org/wiki/Overpass_API/Language_Guides and
+# https://github.com/mapbox/mapping/wiki/Overpass-Guide and
+# http://osmlab.github.io/learnoverpass//en/
+
+# Started as part of: https://hackpad.com/SOTMOSgeo-Hackday-live-reporting-H4q1GRbgRCz
 
 # Using http://www.openstreetmap.org/way/37143281 as a hard-coded sample to start with
 
@@ -50,14 +54,13 @@ urls = (
     '/\(d+)', 'way'
 )
 
-sample_query = "way(37143281);out;"
+sample_query = "[out:json];way(37143281);(around(10);<;);out qt;"
 
 class way:
-    def GET(self):
-        contents = "37143281"
+    def GET(self, way):
+        contents = "sample " + way + " data"
         return render.way(contents)
 
 if __name__ == "__main__":
     app = web.application(urls, globals())
     app.run()
-o
