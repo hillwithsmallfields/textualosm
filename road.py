@@ -1,5 +1,6 @@
 #!/usr/bin/python
 import web
+import urllib
 
 # For the web part, see http://webpy.org/docs/0.3/tutorial
 
@@ -54,12 +55,12 @@ urls = (
     '/\(d+)', 'way'
 )
 
-sample_query = "[out:json];way(37143281);(around(10);<;);out qt;"
-
 class way:
     def GET(self, way):
-        contents = "sample " + way + " data"
-        return render.way(contents)
+        sample_query = "[out:json];way(37143281);(around(10);<;);out qt;"
+        handle = urllib.open(sample_query)
+        mapdata = handle.read()
+        return render.way(mapdata)
 
 if __name__ == "__main__":
     app = web.application(urls, globals())
