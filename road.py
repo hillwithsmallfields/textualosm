@@ -53,6 +53,8 @@ import overpass
 #                                         Reduta | Námestie Ľudovíta Štúra
 #                                 --- Mostová ---+--- Mostová ---
 
+# To test, run this program from the command line with the port number you want to use, then in your browser visit localhost:<port>/<wayID>
+
 render = web.template.render('templates/')
 urls = (
     '/(\d+)', 'way'
@@ -77,7 +79,13 @@ class way:
         feature_query = query_preamble + query + query_postamble
         print "Query is", feature_query
         mapdata = overpass_api.Get(feature_query)
+
+
         # todo: fetch the segments (nodes) of the way, using WayQuery in the python API wrapper
+
+        way_query = overpass.WayQuery('[' + query + ']')
+        way_response = overpass_api.Get(way_query)
+
         # todo: convert into features along the way, combining building areas with POIs tagged inside those areas
         # todo: sort the features along the way, probably by working out which way segment the feature is nearest to, and where along that segment the normal from the way to the feature centre falls
         # todo: filter out features which are behind others (we can't guarantee to get only the front rank of things facing the street)
@@ -86,7 +94,8 @@ class way:
         debug_text = ""
         # debug_text += "way data: " + str(way) + "\n"
         debug_text += "feature data:\n" + '\n'.join([str(f) for f in mapdata['features']])
-        return render.way("Query was:\n" + query + "\nand reply was:\n" + debug_text)
+        debug_text += "way data:\n" + str(way_response) + "\n"
+        return render.way("Query was:\n" + query + "\nAnd full query was:\n" + feature_query + "\nand reply was:\n" + debug_text)
 
 if __name__ == "__main__":
     app = web.application(urls, globals())
