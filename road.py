@@ -55,17 +55,69 @@ import overpass
 
 # To test, run this program from the command line with the port number you want to use, then in your browser visit localhost:<port>/<wayID>
 
-render = web.template.render('templates/')
+# render = web.template.render('templates/')
 urls = (
     '/(\d+)', 'way'
 )
 
 overpass_api = overpass.API()
 
+class edge:
+
+    """
+
+    Edges represent the sections between the successive nodes from the OSM server.
+
+    They hold the incoming way data in a form helpful for converting
+    to output segments, which typically represent smaller sections of
+    the way.
+
+    """
+
+    def __init__(self):
+        self.travel = 0.0
+        self.distance = 0.0
+        self.direction = 0.0
+        self.start_latitude = 0.0
+        self.start_longitude = 0.0
+        self.osm_type = None    # usually highway
+        self.osm_subtype = None # residential, tertiary, etc
+        self.segments = []      # references to the output data being constructed
+
+class segment:
+
+    """This describes one segment of the road.
+
+    A segment may hold a feature fronting the road on one side, or one
+    on each side, or describe a part of the road (for junctions,
+    pedestrian crossings, etc), or possibly both.
+    """
+
+    def __init__(self):
+        self.left_fronter = None
+        self.left_setback = 0.0
+        self.right_fronter = None
+        self.right_setback = 0.0
+        self.travel = 0.0       # how much travel this segment covers
+        self.distance = 0.0     # cumulatively from the start of the road
+        self.direction = 0.0    # the compass direction
+        self.road_feature = None
+        self.edge = None        # reference to the incoming data
+
+class street:
+
+    def __init__(self):
+        self.edges = []
+        self.segments = []
+
+    def add_fronter(self, fronter, along, setback):
+        # todo: use the edges to put a segment in place that this fronter can go on
+        pass
+
 class way:
     def GET(self, way):
         query_preamble = "" # """[out:json];"""
-        query = "way(37143281);" # In the complete program, this will be able to take a way ID, or a (street) name and something to disambiguate it (city etc)
+        query = "way(37143281);" # In the complete program, this will be able to take a way ID, or a (street) name and something to disambiguate it (city etc); it should also be able to take a set of ways representing a street, and perhaps a list of way sections representing a result from a routing engine
         fetcher_params = { "building" : "building", # may have to be building|shop|amenity
                            "wayrange": 10,
                            "noderange": 20}
@@ -80,11 +132,22 @@ class way:
         print "Query is", feature_query
         mapdata = overpass_api.Get(feature_query)
 
-
         # todo: fetch the segments (nodes) of the way, using WayQuery in the python API wrapper
 
         way_query = overpass.WayQuery('[' + query + ']')
         way_response = overpass_api.Get(way_query)
+
+# or, get the way, then use "around:5" for within 5 metres
+# way[building](around.THEOTHERQUERY: 30);
+
+# way[highway=primary] -> .blindway;
+# way[building](around.blindway: 30);
+
+# cross track distance, long track distance
+
+# (from Tobias Zwick)
+
+# https://movable-type.co.uk/scripts/latlong.html
 
         # todo: convert into features along the way, combining building areas with POIs tagged inside those areas
         # todo: sort the features along the way, probably by working out which way segment the feature is nearest to, and where along that segment the normal from the way to the feature centre falls
