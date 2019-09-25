@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python3
 # coding=utf-8
 import web
 import overpass
@@ -129,8 +129,10 @@ class way:
         way_query = overpass.WayQuery(query)
         # way = overpass_api.Get(way_query)
         feature_query = query_preamble + query + query_postamble
-        print "Query is", feature_query
+        print("Query is", feature_query)
         mapdata = overpass_api.Get(feature_query)
+
+        print("Got back mapdata", mapdata)
 
         # todo: fetch the segments (nodes) of the way, using WayQuery in the python API wrapper
 
