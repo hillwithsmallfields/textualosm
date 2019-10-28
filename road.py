@@ -1,15 +1,20 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 # coding=utf-8
+from __future__ import print_function
 import web
 import overpass
+import geojson
+import sys
+import pprint
+import json
 
 # For the web part, see http://webpy.org/docs/0.3/tutorial
 
 # For the OSM part, see
 # http://wiki.openstreetmap.org/wiki/Overpass_API/Language_Guide and
-# https://github.com/mapbox/mapping/wiki/Overpass-Guide and
-# http://osmlab.github.io/learnoverpass//en/
-# and for the API wrapper:
+# https://github.com/mapbox/mapping/wiki/Overpass-Guide and and
+# https://wiki.openstreetmap.org/wiki/Overpass_API/Overpass_QL and
+# http://osmlab.github.io/learnoverpass//en/ and for the API wrapper:
 # https://github.com/mvexel/overpass-api-python-wrapper
 
 # Started as part of: https://hackpad.com/SOTMOSgeo-Hackday-live-reporting-H4q1GRbgRCz
@@ -115,41 +120,42 @@ class street:
         pass
 
 class way:
-    def GET(self, way):
-        query_preamble = "" # """[out:json];"""
-        query = "way(37143281);" # In the complete program, this will be able to take a way ID, or a (street) name and something to disambiguate it (city etc); it should also be able to take a set of ways representing a street, and perhaps a list of way sections representing a result from a routing engine
-        fetcher_params = { "building" : "building", # may have to be building|shop|amenity
-                           "wayrange": 10,
-                           "noderange": 20}
-        get_nodes = """node [~".+"~".+"](around:%(noderange)d);""" % fetcher_params
-        # for the following two, I might omit the final ">;" and use the "out center", but then I wouldn't be able to tell whether the tagged nodes retrieved above are inside the buildings
-        get_areas = """way [~"%(building)s"~".+"](around:%(wayrange)d);>;""" % fetcher_params
-        get_relations = """rel [~"%(building)s"~".+"](around:%(wayrange)d);>;""" % fetcher_params # todo: fetch just the outer of the relation (and fetch only multipolygon relations)
-        query_postamble = "(" + get_nodes + get_areas + get_relations + ");"
-        way_query = overpass.WayQuery(query)
-        # way = overpass_api.Get(way_query)
-        feature_query = query_preamble + query + query_postamble
-        print("Query is", feature_query)
-        mapdata = overpass_api.Get(feature_query)
 
-        print("Got back mapdata", mapdata)
+    def __init__(self):
+        pass
 
-        # todo: fetch the segments (nodes) of the way, using WayQuery in the python API wrapper
+    def GET(self, way_id_or_name):
+        pp = pprint.PrettyPrinter(indent=2)
+        # In the complete program, this will be able to take a way ID,
+        # or a (street) name and something to disambiguate it (city
+        # etc); it should also be able to take a set of ways
+        # representing a street, and perhaps a list of way sections
+        # representing a result from a routing engine
 
-        way_query = overpass.WayQuery('[' + query + ']')
-        way_response = overpass_api.Get(way_query)
+        query = "37143281"
 
-# or, get the way, then use "around:5" for within 5 metres
-# way[building](around.THEOTHERQUERY: 30);
+        # todo: try to get the geometry of the way, without having to fetch the nodes; likewise, try to get the building co-ordinates
+        way_query = "(way(" + query + """)->.w;
+        .w >;
+        way[building](around.w: 10)->.b;
+        .b >;
+        );"""
+        print("Way query is", way_query)
+        way_data = overpass_api.get(way_query, responseformat='json')
+        print("pretty-printed:")
+        pp.pprint(json.loads(geojson.dumps(way_data)))
 
-# way[highway=primary] -> .blindway;
-# way[building](around.blindway: 30);
+        # or, get the way, then use "around:5" for within 5 metres
+        # way[building](around.THEOTHERQUERY: 30);
 
-# cross track distance, long track distance
+        # way[highway=primary] -> .blindway;
+        # way[building](around.blindway: 30);
 
-# (from Tobias Zwick)
+        # cross track distance, long track distance
 
-# https://movable-type.co.uk/scripts/latlong.html
+        # (from Tobias Zwick)
+
+        # https://movable-type.co.uk/scripts/latlong.html
 
         # todo: convert into features along the way, combining building areas with POIs tagged inside those areas
         # todo: sort the features along the way, probably by working out which way segment the feature is nearest to, and where along that segment the normal from the way to the feature centre falls
@@ -158,9 +164,9 @@ class way:
         # todo: output
         debug_text = ""
         # debug_text += "way data: " + str(way) + "\n"
-        debug_text += "feature data:\n" + '\n'.join([str(f) for f in mapdata['features']])
-        debug_text += "way data:\n" + str(way_response) + "\n"
-        return render.way("Query was:\n" + query + "\nAnd full query was:\n" + feature_query + "\nand reply was:\n" + debug_text)
+        # debug_text += "feature data:\n" + '\n'.join([str(f) for f in mapdata['features']])
+        # debug_text += "way data:\n" + str(way_response) + "\n"
+        # return render.way("Query was:\n" + query + "\nAnd full query was:\n" + feature_query + "\nand reply was:\n" + debug_text)
 
 if __name__ == "__main__":
     app = web.application(urls, globals())
