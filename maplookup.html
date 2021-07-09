@@ -1,0 +1,47 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<html> <head>
+<title>Map fetcher</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<style>
+table.mapEntriesTable {
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+td {
+    padding: 10px;
+}
+td.entry_address {
+    border: 1px solid black;
+    voice-family: male;
+    richness: 90;
+}
+td.entry_class {
+    border: 1px solid black;
+    pause-before: strong;
+    voice-family: female;
+}
+td.country {
+    font-style: italic;
+    border: 1px solid black;
+    voice-family: female;
+}
+</style>
+</head>
+
+<body>
+<h1>Map fetcher</h1>
+
+<script src="maplookup.js"></script>
+
+<form id="mapfetcher">
+<label for="mapquery">Map query: </label>
+<input type="text" name="mapquery" id="mapquery"/>
+<br>
+<label for="fetch">Fetch:</label>
+<input type="button" name="fetch" value="Fetch" onClick="fetch_map();"></input>
+</form>
+
+<div id="results"></div>
+
+</body> </html>
