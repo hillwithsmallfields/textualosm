@@ -157,6 +157,8 @@ class way:
 
         # https://movable-type.co.uk/scripts/latlong.html
 
+        # and https://en.wikipedia.org/wiki/Distance_from_a_point_to_a_line and https://sites.math.washington.edu/~king/coursedir/m445w04/notes/vector/normals-planes.html
+
         # todo: convert into features along the way, combining building areas with POIs tagged inside those areas
         # todo: sort the features along the way, probably by working out which way segment the feature is nearest to, and where along that segment the normal from the way to the feature centre falls
         # todo: filter out features which are behind others (we can't guarantee to get only the front rank of things facing the street)
