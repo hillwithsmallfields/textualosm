@@ -27,6 +27,13 @@ def main():
     for point in points:
         print("  ", point)
 
+    start_long, start_lat = points[0]
+    for next_long, next_lat in points[1:]:
+        # TODO: bearings and distances for segments, then use the distances to construct a sequence
+        print("segment", (start_long, start_lat), (next_long, next_lat))
+        start_long = next_long
+        start_lat = next_lat
+
     abutters = road_bits.street_abutters(
         way_id,
         args.start,
@@ -36,7 +43,8 @@ def main():
     for k in sorted(abutters.keys()):
         print("---")
         for a in abutters[k]:
-            print("  ", a.tag('name') or "<unnamed>", road_bits.feature_type(a), a.geometry().get('coordinates'))
+            ftype = road_bits.feature_type(a)
+            print("  ", a.tag('name') or "<unnamed>", a.tag(ftype), ftype, a.geometry().get('coordinates'))
             for k, v in a.tags().items():
                 if k != 'note':
                     print("    ", k, v)
