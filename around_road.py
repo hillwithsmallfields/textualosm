@@ -16,15 +16,30 @@ def main():
 
     road_bits.road_bits_setup()
 
+    way_id = road_bits.way_id_from_name(
+        args.start,
+        road_bits.area(
+            args.city, args.county, args.country))
+
+    points = road_bits.way_points(way_id)
+
+    print("points:")
+    for point in points:
+        print("  ", point)
+
     abutters = road_bits.street_abutters(
-        road_bits.way_id_from_name(args.start,
-                                   road_bits.area(
-                                       args.city, args.county, args.country)),
+        way_id,
         args.start,
         within=args.within)
 
-    for abutter in sorted(abutters.keys()):
-        print("  ", abutter, abutters[abutter])
+    print("results:")
+    for k in sorted(abutters.keys()):
+        print("---")
+        for a in abutters[k]:
+            print("  ", a.tag('name') or "<unnamed>", road_bits.feature_type(a), a.geometry().get('coordinates'))
+            for k, v in a.tags().items():
+                if k != 'note':
+                    print("    ", k, v)
 
 if __name__ == '__main__':
     main()
