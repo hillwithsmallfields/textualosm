@@ -49,7 +49,13 @@ def way_joiners(way_id):
 def way_abutters(way_id, within=10):
     "Get the OSMPythonTools buildings near a way."
     # TODO: get amenities and address-only things too
-    return OVERPASS.query("""(way(%s)->.w;way(around.w:%d)[building];); out;""" % (way_id, within)).elements()
+    return OVERPASS.query(
+        """(way(%s)->.w;
+        (
+          way(around.w:%d)[building];
+        );
+        );
+        out;""" % (way_id, within)).elements()
 
 class Node(object):
 
