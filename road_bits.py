@@ -19,7 +19,7 @@ NODE_WAYS_CACHE = {}
 def area(city, county, country):
     return NOMINATIM.query('%s, %s, %s' % (city, county, country)).areaId()
 
-def way_nodes(way_id):
+def way_points(way_id):
     """Get the OSMPythonTools nodes for a way."""
     global WAY_NODES_CACHE
     global NODE_WAYS_CACHE
@@ -40,7 +40,7 @@ def way_nodes(way_id):
             NODE_WAYS_CACHE[node_id].add(way_id)
         else:
             NODE_WAYS_CACHE[node_id] = set([way_id])
-    return nodes
+    return [node.geometry()['coordinates'] for node in nodes]
 
 def way_joiners(way_id):
     "Get the OSMPythonTools ways joining a way."
@@ -48,7 +48,8 @@ def way_joiners(way_id):
 
 def way_abutters(way_id, within=10):
     "Get the OSMPythonTools buildings near a way."
-    return OVERPASS.query("""(way(%s);way(around:%d)[building];); out;""" % (way_id, within)).elements()
+    # TODO: get amenities and address-only things too
+    return OVERPASS.query("""(way(%s)->.w;way(around.w:%d)[building];); out;""" % (way_id, within)).elements()
 
 class Node(object):
 
@@ -84,14 +85,14 @@ def street_abutters(initial_way_id, way_name, abutters={}, within=25):
     ab = way_abutters(initial_way_id, within=within)
     print("for way", initial_way_id, "got abutters", ab)
     for a in ab:
-        print("  ", a.tag('name'), a.tag('building'))
+        print("  ", a.tag('name'), a.tag('building'), a.tag('addr:street'), a.tag('addr:housenumber'))
     abutters[initial_way_id] = ab
     for stretch in way_joiners(initial_way_id):
         j_name = stretch.tag('name')
         stretch_id = stretch.id()
-        print("got joiner", stretch)
+        print("  got joiner", stretch, j_name)
         if j_name == way_name and stretch_id not in abutters:
-            print("part of same road", way_name)
+            print("  part of same road", way_name)
             street_abutters(stretch_id, way_name, abutters)
     return abutters
 
