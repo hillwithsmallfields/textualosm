@@ -45,6 +45,9 @@ def main():
         for a in abutters[k]:
             ftype = road_bits.feature_type(a)
             print("  ", a.tag('name') or "<unnamed>", a.tag(ftype), ftype, a.geometry().get('coordinates'))
+            feature_street = a.tag('addr:street')
+            if feature_street and feature_street != args.start:
+                print("*** Belongs on a different street ***")
             for k, v in a.tags().items():
                 if k != 'note':
                     print("    ", k, v)
