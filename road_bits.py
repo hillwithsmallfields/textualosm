@@ -36,9 +36,6 @@ def way_points(way_id):
     nodes = []
     # collect the ways of the street
     for way in nodes_result.elements():
-        print("adding", len(way.nodes()), "nodes")
-        for node in way.nodes():
-            print("  adding node", node)
         nodes += way.nodes()
     WAY_NODES_CACHE[way_id] = nodes
     for node in nodes:
@@ -60,9 +57,12 @@ def way_abutters(way_id, within=10):
         """(way(%s)->.w;
         (
           way(around.w:%d)[building];
+          node(around.w:%d)[amenity];
+          node(around.w:%d)[shop];
+          node(around.w:%d)[office];
         );
         );
-        out geom;""" % (way_id, within)).elements()
+        out geom;""" % (way_id, within, within, within, within)).elements()
 
 class Node(object):
 

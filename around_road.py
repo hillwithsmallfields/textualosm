@@ -2,6 +2,7 @@
 
 import argparse
 
+import geometry
 import road_bits
 
 def main():
@@ -27,12 +28,12 @@ def main():
     for point in points:
         print("  ", point)
 
-    start_long, start_lat = points[0]
-    for next_long, next_lat in points[1:]:
-        # TODO: bearings and distances for segments, then use the distances to construct a sequence
-        print("segment", (start_long, start_lat), (next_long, next_lat))
-        start_long = next_long
-        start_lat = next_lat
+    this = points[0]
+    for that in points[1:]:
+        bearing = geometry.bearing(this, that)
+        distance = geometry.distance(this, that)
+        print("segment", this, that, "distance", round(distance), "bearing", round(bearing), "https://www.openstreetmap.org/#map=19/%g/%g" % (this[1], this[0]))
+        this = that
 
     abutters = road_bits.street_abutters(
         way_id,
@@ -44,7 +45,7 @@ def main():
         print("---")
         for a in abutters[k]:
             ftype = road_bits.feature_type(a)
-            print("  ", a.tag('name') or "<unnamed>", a.tag(ftype), ftype, a.geometry().get('coordinates'))
+            print("  ", a.tag('name') or "<unnamed>", a.tag(ftype), ftype, a.geometry().get('coordinates')[0])
             feature_street = a.tag('addr:street')
             if feature_street and feature_street != args.start:
                 print("*** Belongs on a different street ***")
