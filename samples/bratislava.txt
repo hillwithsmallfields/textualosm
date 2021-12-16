@@ -1,0 +1,292 @@
+Key to map:
+
+# Lines starting and ending with asterisks are the markers for the section describing each street, with the street name between the asterisks.
+
+# Lines beginning with hashes are comments, which are unformatted explanatory text.  There is a comment at the start of each street, indicating which direction it is being described from, and there are some other comments.
+
+# Down the middle of each section there are vertical bar characters representing the street itself.  At junctions, these are replaced by plus signs, and at pedestrian crossings, they are replaced by percent signs.
+
+# Side streets are marked with three dashes, a space, the side street name, a space, three dashes.  They are followed or preceded by a plus sign marking the street being described.
+
+* Štúrova *
+
+# Starting from north-west end, each line reads your right-hand side then your left as you walk down the file.
+
+                --- Namestie SNP ---+--- Spitalska ---
+                   Kuskus fast food | car park
+                     22 Tatra Banka | kiosk
+                       21 Fio Banka | public convenience
+             Pod Manderlom pharmacy +--- Dunajska ---
+                   --- Laurinska ---+ bank Slovenská sporiteľňa
+                           building | 1 building
+                              alley | 1 building
+                           building | 1 building
+                     --- Gorkého ---+ 1 stationery shop
+Courthouse Generálna prokuratúra SR | alley / tunnel Pasáž Luxor, and nightclub
+                  --- Jesenského ---+ 3 ATM Slovenská sporiteľňa
+                     Greentree Café | 1 bank Eximbank SR
+               Pharmacy DM Drogerie |
+                      --- Medená ---+--- Grösslingová ---
+                    Shoe shop Gabor % ATM OTP
+                Steak house Lúčnica | 5 building
+                   Shoe shop Ľubica | 7 building
+                        8 Café Štúr | 9 pub A-klub
+                6 Tulip House hotel | 9 bookshop Academia
+                   --- Tallerova ---+ bank Slovenská sporiteľňa
+               12 restaurant PASTVA | ATM and bank ČSOB
+                        12 building | 13 ATM and bank VÚB
+                        14 building | pharmacy Dr Max
+                        16 building | 15 police station
+                        16 building | park entrance with burger kiosk
+                           building % park entrance with kiosk, burger kiosk, and sandwich kiosk
+                           building +--- Šafárikovo námestie ---
+                 --- Dobrovičova ---+--- Šafárikovo námestie ---
+  fast food Vietnamské bistro LOTUS | park
+                    7 nightclub UHU | park
+             7 sandwich shop Subway | park
+                  7 café Blue Magic | park
+           7 restaurant Trafená hus | park with public conveniences
+                    --- Tobrucká ---+ park
+             8 Právnická fakulta UK | big junction area
+         --- Vajanského nábrežie ---+--- Dostojevského rad ---
+                           car park | pub Pumelka
+                           car park | café Umelka
+                           car park | nightclub Kumelka
+                           car park | arts centre Galéria SVÚ
+                           car park | Umelka pub
+                       pub Malý Rim |
+                           car park |
+                   Múzeum colníctva |
+          --- Fajnorovo nábrežie ---+
+
+* Tallerova *
+
+# Starting from north-east end, each line reads your right-hand side then your left as you walk down the file.
+
+   --- Štúrova ---+--- Štúrova ---
+       Tulip café | Restaurant Pastva
+       9 building | 10 building
+       7 building | 8 building
+       5 building | 6 building
+     7/3 building | 4 Café Merian
+         OTP bank % 2 Off-licence Bottleshop sk
+  --- Tobrucká ---+--- Tobrucká ---
+
+* Dobrovičova *
+
+# Starting from north-east end, each line reads your right-hand side then your left as you walk down the file.
+
+             --- Štúrova ---+--- Štúrova ---
+                 9 building | fast food Vietnamské bistro LOTUS
+                 9 building | fast food Hot-n-ready
+                   alleyway | fast food Hot-n-ready
+        Hairdresser Destiny | 2 building
+        steps to Print shop | 2 building
+               gated garden | 82/5 Pizza Mizza
+   Steps to Galeria Satelit | 82/5 Pizza Mizza
+          3 Galeria Satelit | road triangle
+1 Hairdresser Studio Andrea | road triangle
+            --- Tobrucká ---+--- Tobrucká ---
+             --- Múzejná ---+
+
+# This junction is hard to represent here.  Tobrucká goes straight through it, and Dobrovičova is a branch off that.  Múzejná goes off Tobrucká at a right angle from where Dobrovičova joins Tobrucká.
+
+* Medená *
+
+# Starting from north-east end, each line reads your right-hand side then your left as you walk down the file.
+
+                                --- Štúrova ---+--- Štúrova ---
+                          pharmacy DM Drogerie % Shoe shop Gabor
+                                      building | Shoe shop Passo di Trend
+                                      building | kindergarten Materská škola
+                                   35 building | bank ČSOB
+                                   33 Caffe 33 | building 20
+                                   31 building | 18 restaurant Spaghetti Leviathan
+                             29 Musica Slovaca | 16 Nightclub Nu Spirit Bar
+                               110/27 building | 16 Nightclub Nu Spirit Bar
+                                   25 building | 14 Dowina musical instruments
+                                   23 building | 12 building
+                                21 Music av 21 +--- Tobrucká ---
+                                      alleyway % road triangle containing postbox
+19 Convenience shop Celiakis - bezlepkový svet | 10 (past road triangle)
+                       19 music shop Dr. Horák | road triangle
+                                 31/7 building | road triangle
+                                --- Kúpeľná ---+--- Kúpeľná ---
+	       bookshop Kníhkupectvo U Bandiho % building
+		       Café La Vecchia Bottega | building
+				   15 building | Shop Moja Samoška
+				   13 building | Shop Moja Samoška
+				   11 building | 4 Okrsková stanica mestskej polície hlavného mesta SR Bratislavy
+				  Hotel Avance | Okrsková stanica mestskej polície hlavného mesta SR Bratislavy
+				    5 building | Ministerstvo životného prostredia Slovenskej republiky
+				        Reduta | Námestie Ľudovíta Štúra
+			        --- Mostová ---+--- Mostová ---
+
+* Tobrucká *
+
+# Starting at the end nearer you.
+
+                                   --- Medená ---+--- Medená ---
+                                               2 % 1
+                                               2 | Restaurant Ari
+                                               2 | OTP Bank
+                            4 Restaurant Messina +--- Tallerova ---
+                                               6 % Bottleshop SK
+                                               4 |
+                                         Múzejná +-- Dobrovičova ---
+                                        Car park | Pavement space
+Právnická fakulta, Rektorát, Filozofická fakulta | Pizza Mizza
+                                     bar Ponorka | Právnická fakulta 10
+                                               7 | Právnická fakulta 8
+                                             gap | Právnická fakulta 8
+                          Restaurant Trafena hus | Právnická fakulta 8
+                      --- Šafárikovo námestie ---+--- Šafárikovo námestie ---
+
+* Jesenského *
+
+# Starting at the end nearer you.
+
+           --- Štúrova ---+--- Štúrova ---
+ Generálna prokuratúra SR % Greentree Café
+                        7 | Travel Agent Hechter
+   7 Akadémia vzdelávania +--- Palackého ---
+               8 Bookshop | Palackého (funny junction)
+                        6 | 8
+                        4 | 6
+      Komenského námestie | phonebox
+                 Car park +--- Garáž Opera (passageway) ---
+      Komenského námestie | 48
+                        2 | 48
+Slovenské národné divadlo | Gymnázium Matky Alexie
+Slovenské národné divadlo | Sberbank
+                 Fountain | Hedge
+  Hviezdoslavovo námestie | Námestie Eugena Suchoňa
+
+* Komenského námestie *
+
+# There are two ways of this name, one of them a road, and the other a serviceway in and out of a car park, so they form two parallel sides of a square.
+
+    --- Gorkého ---+--- Gorkého ---
+          Car park | 4
+ --- Jesenského ---+--- Jesenského ---
+
+* Gorkého *
+
+# Starting at the end nearer you
+
+                               ---Štúrova ---+--- Štúrova ---
+                                    building % 14 Generálna prokuratúra SR
+                    --- City Gate Passage ---+ 14 Generálna prokuratúra SR
+                                          17 |  12 Optika Gorkého
+                                          15 | 10 Akadémia vzdelávania
+                                          13 | 8
+                       11 Restaurant Grémium | 8
+                                           9 | 6
+                               VUB Cashpoint | 4
+                           --- passageway ---+ 4
+                                           7 % Komenského námestie (road)
+ 7A Honorárny konzulát Monackého kniežatstva | car park
+                                           5 | Komenského námestie (car park access)
+                                  passageway | 2
+                      restaurant Beer Palace | 2
+                                    car park | Slovenské národné divadlo
+                               Poštová banka | Slovenské národné divadlo
+                           --- passageway ---+ Slovenské národné divadlo
+                           Optician Proglass | Slovenské národné divadlo
+                           Restaurant Narnia | Fountain at start of Hviezdoslavovo námestie
+                                  McDonald's | Fountain at start of Hviezdoslavovo námestie
+                       --- Rybárska brána ---+ Open space of Slovenské národné divadlo begins
+
+* Hviezdoslavovo námestie *
+
+# Starting from the end nearer the hotel.  It has two vertical bar columns, as it is a square with things in the middle.
+
+                                                          McDonalds | Fountain and plants       |  Námestie Eugena Suchoňa
+                                              --- Rybárska brána ---+                           |
+                                                Restaurant Le Monde |                           |
+                                               25 Le Club by Medusa | Bicycle parking           | Drop-off loop begins
+                                                                 24 |                           |
+                                                          Slang Pub | Trees begin               |
+                                                           Bookshop | Water tap                 |
+                                                    Tatra Banka ATM |                           | Restaurant Korzo, with laundrette "Clean" up passageway
+                                                    Restaurant Kogo |                           | Hublot watches
+      --- passageway into courtyard with café and ice cream shop ---+                           | Clothes shop Alfredo Villalba
+                                           20 Restaurant Carnevalle |                           | Restaurant Savoy
+                                             19 Restaurant Zylinder | Statue                    | Drop-off loop ends
+                                                   Restaurant Verne | More trees                +--- Paulínyho ---
+                                      Vysoká škola výtvarných umení |                           | Building
+                                                     Galéria Médium |                           | US Embassy
+                                                           Building |                           |
+                                                    --- Strakova ---+--- route across square ---+ Clothes shop Bigner
+                                                    17 Kino Mladosť |                           | Restaurant Lemon Tree
+                                                   17 Café 17's Bar |                           | Bar "Rum Club"
+                                                    16 Café Luculus |                           | Veľvyslanectvo Českej republiky
+                                                  15 Restaurant Rio |                           | Veľvyslanectvo Spolkovej republiky Nemecko
+                                                14 Café Momo Garden |                           | Car park
+14 Kancelária Veľvyslanectva Azerbajdžanskej Republiky v Bratislave |                           | Car park
+                                            13 Slovenská sporiteľňa |                           | Car park
+                                                                ATM |                           | Car park
+                                               Restaurant El Gaucho |                           | Car park
+                                                        12 Building |                           | Car park
+                                         11 Moods bakery and coffee |                           | Car park
+                                              --- Rybné námestie ---+---   Rybné námestie    ---+--- Rybné námestie ---
+
+                   
+* Rybárska brána *
+
+# Starting at the northwest end, and working towards the McDonalds on the corner of Hviezdoslavovo námestie.
+
+                   Giraffe bar | Kaffee Mayer
+                FACE café club | Kaffee Mayer
+                    Antik café | Danube souvenirs
+                    Antik café | I Love Pizza
+                 --- Panská ---+--- Laurinská ---
+           1  Pizzeria Senator | ATM
+                             6 | F&M bageta
+                     gift shop | Mezzo Café
+           restaurant Le Monde | McDonalds
+--- Hviezdoslavovo námestie ---+--- Gorkého ---
+              
+* Panská *
+
+# Starting at the northeast end
+
+                                                --- Rybárska brána ---+--- Rybárska brána ---
+                                                     2 Jewellery shop | Jewellery shop 1
+                                                                    2 | Café de Zwaan
+                                                4 BON BON čokoládovňa | Habibi Café
+                                          4 Samé Pekné Veci gift shop | 9
+                                              6 Verdict -x restaurant | Samaritán pharmacy
+                                              8 Slovenská reštaurácia +--- path through arch in building to ice cream shop ---
+                                                   10 TUI ReiseCenter | greengrocer
+                                           12 Zlatá koruna restaurant | La Cava Barcelona (Hungarian restaurant)
+                                                          12 Globtour | Pub
+                                                    14 La Putika café | British Council 17
+                                           14 Freywille jewllery shop | Galéria Maráky furniture shop
+Veľvyslanectvo Spojeného kráľovstva Veľkej Británie a Severného Írska | Galéria mesta Bratislavy
+                                                             building | Pálffyho palác and Café Shtoor
+                                        20 FÚZ Keby len kaviareň café | 5
+                                                     --- Ventúrska ---+--- Strakova ---
+                                                            water tap | Mondieu café
+           Ventúrska klubovňa (doplnenieotváracích hodín reštaurácií) | Pivnice u kozla
+                                                          24 building | Fokus optician
+                                                             building | Vinotéka Norton
+                                              Kryštal Katka jewellery | gift shop
+                                 Jazykovedný ústav Ľudovíta Štúra SAV | Rio Grande Restaurant
+                                                   Rudnayovo námestie | Aeolus travel agency
+                                                   Rudnayovo námestie | Sumba gift shop
+                                                   Rudnayovo námestie | San Marten restaurant
+                                                   Rudnayovo námestie | buildings 
+                                                   Rudnayovo námestie | BIBIANA, Medzinárodný dom umenia pre deti
+                                           --- path near main road ---+--- Rybné námestie ---
+                
+* Strakova *
+
+# Starting at the northern end.
+
+                 --- Panská ---+--- Panská ---
+                  Mondieu café | building 5
+               Sushi bar Tokyo | building 5
+                           ATM | building 3
+                  Kino Mladosť | building 1
+--- Hviezdoslavovo námestie ---+--- Hviezdoslavovo námestie ---
