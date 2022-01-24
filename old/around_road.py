@@ -2,8 +2,20 @@
 
 import argparse
 
+import contextily as ctx
+
 import geometry
 import road_bits
+
+def draw():
+    fig_height = 600
+    ratio = 1.2
+    fig_width = fig_height * ratio
+    fig, ax_plt = plt.subplots(figsize=(fig_width, fig_height))
+    ctx.add_basemap(
+        self.ax_plt,
+        source=BASEMAP_PROVIDER,
+        zoom=self.style['basemap_zoom'])
 
 def main():
     parser = argparse.ArgumentParser()
