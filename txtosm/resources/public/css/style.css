@@ -1,2 +1,11 @@
 /* some style */
 
+div.textualmap {
+    background-color: lightgreen;
+}
+
+div.debugitem {
+    background-color: grey;
+    color: red;
+}
+
