@@ -1,7 +1,7 @@
 TextualOSM
 ==========
 
-TextualOSM is a web server to produce textual representations of data
+TextualOSM is an in-page web application to produce textual representations of data
 from openstreetmap.org, intended for use with speech synthesizers and
 braille.
 
