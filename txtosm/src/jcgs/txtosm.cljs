@@ -33,8 +33,6 @@
   [:div {:class "app"}
    [title]
    [:div {:class "textualmap"}
-    ;; (for [temp (vals (:temperatures @app-state))]
-    ;;   [temperature temp])
     (for [item (vals (:api-results @app-state))]
       [debug-item item])
     ]])
@@ -50,4 +48,4 @@
   ;; your application
   ;; (swap! app-state update-in [:__figwheel_counter] inc)
 )
-)
+
