@@ -3,7 +3,7 @@
   :auto-testing true
    }
 {:main jcgs.txtosm
- :target bundle
+ :target :bundle
  :bundle-cmd {:none ["npx" "webpack" "--mode=development" "--entry" :output-to
                      "--output-path" :final-output-dir
                      "--output-filename" :final-output-filename]}}
