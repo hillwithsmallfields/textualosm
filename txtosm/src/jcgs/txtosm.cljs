@@ -3,7 +3,7 @@
    [goog.dom :as gdom]
    [reagent.dom :as rdom]
    [reagent.core :as r]
-   ;; [overpass-frontend :as ovps] ; TODO: nothing works if this is not commented out
+   [overpass-frontend :as ovps] ; TODO: nothing works if this is not commented out
    ))
 
 (println "This text is printed from src/jcgs/txtosm.cljs. Go ahead and edit it and see reloading in action A.")
