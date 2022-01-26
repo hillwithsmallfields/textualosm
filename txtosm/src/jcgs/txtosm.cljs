@@ -3,21 +3,19 @@
    [goog.dom :as gdom]
    [reagent.dom :as rdom]
    [reagent.core :as r]
-   [overpass-frontend :as ovps] ; TODO: nothing works if this is not commented out
+   [overpass-frontend :as ovps]
    ))
 
-(println "This text is printed from src/jcgs/txtosm.cljs. Go ahead and edit it and see reloading in action A.")
+(println "This text is printed from src/jcgs/txtosm.cljs. Go ahead and edit it and see reloading in action G.")
 
-;; (js/console.log ovps)
-(js/console.log "ovps")
-
-(defn multiply [a b] (* a b))
+;; (js/console.log "ovps")
 
 ;; define your app data so that it doesn't get over-written on reload
 (defonce app-state (atom
                     {:text "Hello textually mapped world!"
                      :title "street name to go here followed by things"
                      :api-results ["thing one" "thing two"]
+                     :overpass (new ovps "//overpass-api.de/api/interpreter")
                      :rows []}))
 
 (defn title []
@@ -27,8 +25,9 @@
   (gdom/getElement "app"))
 
 (defn debug-item [item]
-  [:li {:class "debugitem"}
-   (str item " for debug")])
+  [:li {:class "debugitem"
+        :key (str item)}
+   (str "item " item " for debug")])
 
 (defn app []
   [:div {:class "app"}
@@ -36,10 +35,10 @@
    [:div {:class "textualmap"}
     [:ul
     (for [item (:api-results @app-state)]
-      [debug-item item])
-     ]
-    ]
-   ])
+      [debug-item item])]
+    [:div
+     [:pre
+      (str (:overpass @app-state))]]]])
 
 (defn mount-app-element []
   (rdom/render [app] (get-app-element)))
