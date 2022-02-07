@@ -164,7 +164,6 @@
 
         ;; based on verypossible:
         (.call (. (:overpass @app-state) -BBoxQuery)
-               call                     ; not sure what this does, copied verbatim from example; doesn't work with nor without it
                query-a-2 bbox-a
                query-options
                ;; I wrapped these as I suspected that calling them
