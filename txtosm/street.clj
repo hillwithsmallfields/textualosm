@@ -1,7 +1,9 @@
 ;; experimenting with the core logic for txtosm:
 
 (ns jcgs.street
-  (:require [cheshire.core :refer :all]))
+  (:require [
+             cheshire.core :refer :all ; for JSON
+             ]))
 
 (defonce street-name
   ;; "Štúrova"
@@ -18,14 +20,54 @@
 
 ;; (println (str (count raw-street)) " elements")
 
-(def points (into {} (for [p (filter #(= (% "type") "node") raw-elements)]
-                       {(p "id") [(p "lat") (p "lon")]})))
+(def points
+  "A map from point IDs to their latitudes and longitudes."
+  (into {}
+        (for [p (filter #(= (% "type") "node")
+                        raw-elements)]
+          {(p "id")
+           [(p "lat") (p "lon")]})))
 ;; (println (str (count points) " points"))
 
+(def highway-ways
+  ;; All the ways in the data that represent any kind of highway
+  (into {}
+        (for [p (filter #(and (= (% "type") "way")
+                              (get-in % ["tags" "highway"]))
+                        raw-elements)]
+          {(p "id") p})))
+
+;; (println "highway ways are:" highway-ways)
+
+(def highway-names
+  ;; A set of all the highway names in the data
+  (into (set())
+        (filter identity
+                (for [w (vals highway-ways)]
+                  (get-in w ["tags" "name"])))))
+
+(println "highway names:" highway-names)
+
+(def highway-way-groups-by-name
+  ;; A map from highway names to maps of way-IDs to ways
+  (into {}
+        (for [n highway-names]
+          {n (into {}
+                   (for [id-hw (seq highway-ways)
+                         :when (= (get-in (second id-hw) ["tags" "name"])
+                                  n)]
+                     id-hw))})))
+
+(doseq [nv highway-way-groups-by-name]
+  (println "group by name:" (key nv) (val nv)))
+
 (defn latlon-of-point [point-id]
+  "Look up a point-id in the points map."
   (points point-id))
 
 (defn osm-url-of-point [point-id]
+  "Return an OSM URL for a point, using the optional marker.
+Handy for seeing where things are, for debugging."
   (let [coords (latlon-of-point point-id)]
     (format "https://www.openstreetmap.org/?mlat=%g&mlon=%g#map=18/%g/%g"
             (first coords) (second coords)
@@ -40,6 +82,10 @@
   (* r (/ 180 Math/PI)))
 
 (defn distance
+  "Return the distance between two points.
+  The input can be given as two points, which are either point
+  IDs (numbers) or pairs of latitude and longitude; or it can be give
+  as latitude and longitude of each point."
   ([from to] (let [from-spec (if (int? from)
                                (latlon-of-point from)
                                from)
@@ -64,6 +110,10 @@
      (* c radius-of-earth))))
 
 (defn bearing
+  "Return the initial bearing from one point to another.
+  The input can be given as two points, which are either point
+  IDs (numbers) or pairs of latitude and longitude; or it can be give
+  as latitude and longitude of each point."
   ([from to] (let [from-spec (if (int? from)
                                (latlon-of-point from)
                                from)
@@ -90,6 +140,8 @@
           360))))
 
 (defn way-distance [way]
+  "Return the distance along a way, following all its points.
+The argument may be either a way dictionary, or a list of nodes."
   (let [nodes (if (map? way)
                 (way "nodes")
                 way)]
@@ -98,20 +150,15 @@
                    (rest nodes)))))
 
 (defn chain-distance [chain]
+  "Calculate the total distance along a list of ways which are
+chained together by their last->first nodes."
   (reduce +
           (map way-distance
                chain)))
 
-(def highways (into {}
-                    (for [h (filter #(and (= (% "type") "way")
-                                          (get-in % ["tags" "highway"]))
-                                    raw-elements)]
-                      {(h "id") h})))
-;; (println (str (count highways) "highways"))
-
 (def main-street (into {} (filter #(= (get-in (second %) ["tags" "name"])
                                       street-name)
-                                  highways)))
+                                  highway-ways)))
 
 (println "main street has" (count main-street) "parts")
 
@@ -131,11 +178,16 @@
   (last-node-of-section (last chain)))
 
 (def main-street-sections-by-first-node
+  ;; For quickly finding a section that follows on from another
+  ;; section (by having as its first node the last node of the other
+  ;; section).
   (into {}
         (for [section (seq main-street)]
           {(first-node-of-section (second section)) section})))
 
 (def main-street-sections-by-last-node
+  ;; For quickly finding a section that leads onto another section (by
+  ;; having as its last node the first node of the other section).
   (into {}
         (for [section (seq main-street)]
           {(last-node-of-section (second section)) section})))
@@ -144,14 +196,32 @@
 (doseq [keyval main-street-sections-by-first-node]
   (println (key keyval) (val keyval)))
 
+(def chains-by-way-name
+  (into {} (for [street-name highway-names]
+             {street-name (list
+                           (into {}
+                                 (filter #(= (get-in % ["tags" "name"])
+                                             street-name)
+                                         (vals highway-ways))))})))
+
+(doseq [thing (seq chains-by-way-name)]
+  (println "thing" thing))
+
+(doseq [[name parts] (seq chains-by-way-name)]
+  (println "    Named highway:" name)
+  ;; (doseq [[id section] (seq parts)]
+  ;;   (println "         ID-ed highway section:" id section))
+  )
+
 (def chains-1
-  (for [section (seq main-street)]
-    (list (second section))))
+  (for [[_ section] (seq main-street)]
+    (list section)))
 
 (doseq [chain chains-1]
   (println "single section:" chain (chain-distance chain)))
 
-(defn extend-chains [chains]
+(defn link-chains [chains]
+  (println "link-chains" chains)
   (for [chain chains]
     (let [starting-node (first-node-of-section (first chain))
           preceding (get main-street-sections-by-last-node starting-node nil)]
@@ -159,16 +229,26 @@
         (cons (second preceding) chain)
         chain))))
 
-(defn extend-chains-fully [chains measure]
+(defn link-chains-fully [chains measure]
   (if (> (count measure) 0)
-    (extend-chains (extend-chains-fully chains
-                                        (rest measure)))
+    (link-chains (link-chains-fully chains
+                                    (rest measure)))
     chains))
+
+(def linked-chains-by-way-name
+  (into {} (for [[name chainset] chains-by-way-name]
+             {name
+              (link-chains-fully chainset chainset)})))
+
+;; (doseq [named (seq linked-chains-by-way-name)]
+;;   (println "    Named highway:" (first named))
+;;   (doseq [ided (seq (second named))]
+;;     (println "         Linked ID-ed highway section:" (first ided) (second ided))))
 
 (def chains-full
   ;; Each chain is a sequence of ways that share start/end nodes.
   ;; Each way may occur in more than one chain.
-  (extend-chains-fully chains-1 chains-1))
+  (link-chains-fully chains-1 chains-1))
 
 (doseq [chain chains-full]
   (println "multiple section:" (count chain))
@@ -200,3 +280,5 @@
 
 (doseq [combined chains-merged]
   (println "combined chain:" combined))
+
+;; useful later: https://en.wikipedia.org/wiki/Distance_from_a_point_to_a_line
