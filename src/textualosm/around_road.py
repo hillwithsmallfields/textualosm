@@ -33,42 +33,34 @@ def main():
 
     road_bits.road_bits_setup()
 
-    way_id = road_bits.way_id_from_name(
-        args.start,
-        road_bits.area(
-            args.city, args.county, args.country))
+    area_id = road_bits.area(args.city, args.county, args.country)
+    street_ways, joiners, abutters = road_bits.fetch_street_data(
+        args.start, area_id, within=args.within)
 
-    points = road_bits.way_points(way_id)
+    log.debug("street ways: %d segments", len(street_ways))
+    for way in street_ways:
+        points = [node.geometry()['coordinates'] for node in way.nodes()]
+        this = points[0]
+        for that in points[1:]:
+            log.debug("segment %s %s; distance %d; bearing %d; https://www.openstreetmap.org/way/%s#map=19/%g/%g",
+                      this, that,
+                      round(geometry.distance(this, that)),
+                      round(geometry.bearing(this, that)),
+                      way.id(), this[1], this[0])
+            this = that
 
-    log.debug("points:")
-    for point in points:
-        log.debug("  %s", point)
-
-    this = points[0]
-    for that in points[1:]:
-        bearing = geometry.bearing(this, that)
-        distance = geometry.distance(this, that)
-        # https://www.openstreetmap.org/way/4042287#map=19/41.330600/19.819935&layers=D
-        log.debug("segment %s %s; distance %d; bearing %d; https://www.openstreetmap.org/way/%s#map=19/%g/%g", this, that, round(distance), round(bearing), way_id, this[1], this[0])
-        this = that
-
-    abutters = road_bits.street_abutters(
-        way_id,
-        args.start,
-        within=args.within)
-
-    log.debug("result abutters:")
-    for i, k in enumerate(sorted(abutters.keys())):
-        log.debug("--- %d: %s ---", i, k)
-        for a in abutters[k]:
-            ftype = road_bits.feature_type(a)
-            log.debug("  name=%s %s=%s coords=%s", a.tag('name') or "<unnamed>", ftype, a.tag(ftype), a.geometry().get('coordinates')[0])
-            feature_street = a.tag('addr:street')
-            if feature_street and feature_street != args.start:
-                log.debug("*** Belongs on a different street ***")
-            for k, v in a.tags().items():
-                if k != 'note':
-                    log.debug("    tag %s=%s", k, v)
+    log.debug("abutters: %d total", len(abutters))
+    for a in abutters:
+        ftype = road_bits.feature_type(a)
+        log.debug("  name=%s %s=%s coords=%s",
+                  a.tag('name') or "<unnamed>", ftype, a.tag(ftype),
+                  a.geometry().get('coordinates')[0])
+        feature_street = a.tag('addr:street')
+        if feature_street and feature_street != args.start:
+            log.debug("*** Belongs on a different street ***")
+        for k, v in a.tags().items():
+            if k != 'note':
+                log.debug("    tag %s=%s", k, v)
 
 if __name__ == '__main__':
     main()
